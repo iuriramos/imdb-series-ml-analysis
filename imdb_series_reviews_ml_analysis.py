@@ -6,7 +6,7 @@ import argparse
 
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.grid_search import GridSearchCV
-from sklearn.cross_validation import train_test_split, StratifiedKFold
+from sklearn.model_selection import train_test_split, StratifiedKFold
 
 from utils.vectorizer import get_vectorizer
 from utils.model import model
@@ -121,5 +121,5 @@ def run_all_settings():
             prefix.pop()
         prefix.pop()
 if __name__ == '__main__':
-    # run()
-    run_all_settings()
+    run()
+    # run_all_settings()
