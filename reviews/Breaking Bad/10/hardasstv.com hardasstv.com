@@ -1,0 +1,7 @@
+Breaking Bad is without doubt the ultimate hardass TV show. Developed by Vince Gilligan and Broadcasted on the AMC network from 2008-2013. Breaking Bad tells the story of chemistry teacher Walter White (Bryan Cranston)who has been diagnosed with stage 3 lung cancer resorting to making Meth (Methamphetamine) so that his family will have enough money to survive after he is gone.
+
+From the outset we can see the character walter white like himself living a clean honorable lifestyle working two jobs to keep afloat his pregnant wife and disabled son. After Walter is diagnosed with lung cancer he decideds one day to go for a ride along with his brother in law Hank who is a DEA agent about to bust a Meth dealer. Walter notices a former student of his Jessie (Aaron Paul) escaping a Meth house and soon tracks him down to discuss the possibility of a business partnership where Walter makes the Meth and Jessie distributes. 
+
+Breaking Bad was the kind of show that went from strength to strength every season. From Walter being a mild mannered high school teacher who's intentions seemed honorable to a feared well known drug maker who uses the alias Heisenberg. This is a show that along with great progressive writing, violence, drug making and the ultimate good to bad story makes is one HARDASS TV show.
+
+www.hardasstv.com
