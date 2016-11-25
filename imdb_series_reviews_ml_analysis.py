@@ -31,7 +31,7 @@ class imdb_series_reviews_ml_analysis:
                                     for param_name, param_values in step_params.items()}
 
             # Stratified K-Fold for cross validation
-            kfold = StratifiedKFold(y_train, n_folds=10, random_state=42)
+            kfold = StratifiedKFold(n_splits=10, random_state=42)
             grid = GridSearchCV(pipeline, param_grid=grid_params, cv=2, n_jobs=4, verbose=1, error_score=0)
             grid.fit(X_train, y_train)
 
@@ -55,7 +55,7 @@ class imdb_series_reviews_ml_analysis:
             grid_search(vect, model_, params)
         else:
             model_ = model.get_model(model_name)
-            grid_search(vect, model_, params={})
+            grid_search(vect, model_, model_params={})
 
 def run():
     # parse command line params
