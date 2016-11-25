@@ -6,7 +6,7 @@ import argparse
 
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.model_selection import train_test_split, StratifiedKFold,  RandomizedSearchCV
 
 from utils.vectorizer import get_vectorizer
 from utils.model import model
@@ -18,9 +18,9 @@ class imdb_series_reviews_ml_analysis:
         self.neg_rating_range = neg_rating_range or (1, 2, 3)
         self.pos_rating_range = pos_rating_range or (8, 9, 10)
 
-    def report(self, vectorizer_params, model_name, show_results):
+    def report(self, vectorizer_params, model_name, use_randomized_search=False, show_results=False):
         # Perform grid search on model_params
-        def grid_search(vect, model_, model_params):
+        def grid_search():
             # steps to make pipeline
             pipeline = Pipeline([('vect', vect), ('model', model_)])
 
@@ -32,7 +32,11 @@ class imdb_series_reviews_ml_analysis:
 
             # Stratified K-Fold for cross validation
             kfold = StratifiedKFold(n_splits=10, random_state=42)
-            grid = GridSearchCV(pipeline, param_grid=grid_params, cv=2, n_jobs=4, verbose=1, error_score=0)
+
+            if not use_randomized_search:
+                grid = GridSearchCV(pipeline, param_grid=grid_params, cv=2, n_jobs=4, verbose=1, error_score=0)
+            else:
+                grid = RandomizedSearchCV(pipeline, n_iter=5, param_distributions=grid_params, n_jobs=4, verbose=1, error_score=0)
             grid.fit(X_train, y_train)
 
             # Present model results
@@ -51,11 +55,11 @@ class imdb_series_reviews_ml_analysis:
         vect = get_vectorizer(**vectorizer_params)
         # perform grid_search on params
         if show_results:
-            model_, params = model.get_model_params(model_name)
-            grid_search(vect, model_, params)
+            model_, model_params = model.get_model_params(model_name)
+            grid_search()
         else:
-            model_ = model.get_model(model_name)
-            grid_search(vect, model_, model_params={})
+            model_, model_params = model.get_model(model_name), dict()
+            grid_search()
 
 def run():
     # parse command line params
@@ -70,6 +74,7 @@ def run():
     parser.add_argument('--no-hashing', action='store_true', default=False, dest='no_hashing', help='Do not use hashing in feature extraction')
     parser.add_argument('--no-tf-idf', action='store_true', default=False, dest='no_tf_idf', help='Do not use TF-IDF feature extraction')
     parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'LinearSVC', 'SVC', 'SGDClassifier'), dest='model_name', help='ML model to classify reviews')
+    parser.add_argument('--use-randomized-search', action='store_true', default=False, dest='use_randomized_search', help='Use RandomizedSearchCV (faster) instead of regular GridSearchCV')
     parser.add_argument('-r', '--show-results', action='store_true', default=False, dest='show_results', help='Show results for all combinations of parameters')
 
     args = parser.parse_args()
@@ -82,7 +87,7 @@ def run():
         'ngram_range': eval(args.ngram_range),
         'n_features': args.n_features,
     }
-    imdb.report(vectorizer_params=vectorizer_params, model_name=args.model_name, show_results=args.show_results)
+    imdb.report(vectorizer_params=vectorizer_params, model_name=args.model_name, use_randomized_search=args.use_randomized_search, show_results=args.show_results)
 
 def run_all_settings():
     imdb = imdb_series_reviews_ml_analysis()
@@ -93,7 +98,7 @@ def run_all_settings():
     prefix = []
     # for use_hashing in False, True:
     for use_hashing in True, :
-        prefix.append('hash_10k' if use_hashing else 'count')
+        prefix.append('hash' if use_hashing else 'count')
         for use_tf_idf in False, True:
             prefix.append('tf_idf' if use_tf_idf else '')
             for use_stop_words in False, True:

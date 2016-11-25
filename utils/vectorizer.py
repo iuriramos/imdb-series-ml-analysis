@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer
 from sklearn.pipeline import make_pipeline
 
-def get_vectorizer(use_hashing, use_tf_idf, use_stop_words, ngram_range, n_features=10000):
+def get_vectorizer(use_hashing, use_tf_idf, use_stop_words, ngram_range, n_features=5000):
     stop_words = 'english' if use_stop_words else None
 
     if use_hashing:
