@@ -17,6 +17,8 @@ class model(object):
             return LogisticRegression(random_state=42, n_jobs=4)
         elif model_name == 'SGDClassifier':
             return SGDClassifier(random_state=42, n_jobs=4)
+        else:
+            raise ValueError("{} not available".format(model_name))
 
     @staticmethod
     def get_model_params(model_name):
