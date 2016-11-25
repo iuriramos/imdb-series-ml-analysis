@@ -26,6 +26,10 @@ def create_dir_structure(directory_name, rating_range):
     return directory_path
 
 def download_imdb_review(directory_path, review):
+    # helper inner class
+    def random_word(length):
+        return ''.join(random.choice(string.lowercase) for _ in range(length))
+
     rating_directory_path = os.path.join(directory_path, str(review.rating))
     if review.username is None:
         review.username = random_word(random.randint(5, 10))
@@ -35,10 +39,6 @@ def download_imdb_review(directory_path, review):
             f.write(review.text)
 
 def download_imdb_reviews(rating_range, directory_path, imdb_id, max_results=1000):
-    # helper inner class
-    def random_word(length):
-        return ''.join(random.choice(string.lowercase) for _ in range(length))
-
     imdb = Imdb()
     for review in imdb.get_title_reviews(imdb_id, max_results=max_results):
         if review.rating in rating_range:
@@ -57,7 +57,7 @@ def download_imdb_crime_series(top, rating_range):
 
     n_series = 0
     while n_series < top:
-        r = requets.get(base_url, params=payload)
+        r = requests.get(base_url, params=payload)
         html_text = r.text
 
         soup = BeautifulSoup(html_text, 'html.parser')
