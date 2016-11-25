@@ -45,8 +45,11 @@ def download_imdb_reviews(rating_range, directory_path, imdb_id, max_results=100
             download_imdb_review(directory_path, review)
 
 def download_imdb_crime_series(top, rating_range):
-    if not os.path.exists(BASE_DIRECTORY_PATH):
-        os.mkdir(BASE_DIRECTORY_PATH)
+    # if base directory exists do not do anything
+    if os.path.exists(BASE_DIRECTORY_PATH):
+        return
+
+    os.mkdir(BASE_DIRECTORY_PATH)
 
     base_url = 'http://www.imdb.com/search/title'
     payload = dict(
