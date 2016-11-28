@@ -73,7 +73,7 @@ def run():
     parser.add_argument('-ngram-range', default='(1, 1)', choices=('(1, 1)', '(1, 2)', '(1, 3)'), dest='ngram_range', help='Ngram range used for text parsing. [choices available: (1, 1) (default), (1,2), (1, 3)')
     parser.add_argument('--no-hashing', action='store_true', default=False, dest='no_hashing', help='Do not use hashing in feature extraction')
     parser.add_argument('--no-tf-idf', action='store_true', default=False, dest='no_tf_idf', help='Do not use TF-IDF feature extraction')
-    parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'LinearSVC', 'SVC', 'SGDClassifier'), dest='model_name', help='ML model to classify reviews')
+    parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'SVC', 'SGDClassifier'), dest='model_name', help='ML model to classify reviews')
     parser.add_argument('--use-randomized-search', action='store_true', default=False, dest='use_randomized_search', help='Use RandomizedSearchCV (faster) instead of regular GridSearchCV')
     parser.add_argument('-r', '--show-results', action='store_true', default=False, dest='show_results', help='Show results for all combinations of parameters')
 

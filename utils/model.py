@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.svm import LinearSVC, SVC
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
 
@@ -11,8 +11,12 @@ class model(object):
             return RandomForestClassifier(random_state=42, n_jobs=4)
         elif model_name == 'MultinomialNB':
             return MultinomialNB()
+        elif model_name == 'BernoulliNB':
+            return BernoulliNB()
         elif model_name == 'SVC':
             return SVC(kernel='rbf', random_state=42)
+        elif model_name == 'NuSVC':
+            return NuSVC(random_state=42)
         elif model_name == 'LinearSVC':
             return LinearSVC(random_state=42)
         elif model_name == 'LogisticRegression':
@@ -29,8 +33,12 @@ class model(object):
             return model, dict(n_estimators=(1, 10, 100), min_samples_split=(2, 5, 10))
         elif model_name == 'MultinomialNB':
             return model, dict()
+        elif model_name == 'BernoulliNB':
+            return model, dict()
         elif model_name == 'SVC':
             return model, dict(C=np.logspace(-1, 3, 5), gamma=np.logspace(-4, 0, 5))
+        elif model_name == 'NuSVC':
+            return model, dict()
         elif model_name == 'LinearSVC':
             return model, dict()
         elif model_name == 'LogisticRegression':
