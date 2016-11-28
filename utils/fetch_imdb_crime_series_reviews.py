@@ -100,8 +100,8 @@ def fetch_review_text(file_path):
         return f.read()
 
 def fetch_imdb_crime_series_reviews(top=25,neg_rating_range=None, pos_rating_range=None):
-    neg_rating_range = neg_rating_range or (1, 2, 3, 4, 5)
-    pos_rating_range = pos_rating_range or (6, 7, 8, 9, 10)
+    neg_rating_range = neg_rating_range or (1, 2, 3,)
+    pos_rating_range = pos_rating_range or (8, 9, 10)
 
     rating_range = list(neg_rating_range + pos_rating_range)
     download_imdb_crime_series(top, rating_range)
@@ -130,6 +130,9 @@ def fetch_imdb_crime_series_reviews(top=25,neg_rating_range=None, pos_rating_ran
 
 def run():
     X, y = fetch_imdb_crime_series_reviews()
+    pos_reviews = sum(y)
+    neg_reviews = len(y) - pos_reviews
+    print 'positive = ', pos_reviews, ', negative = ', neg_reviews
 
 if __name__ == '__main__':
     run()
