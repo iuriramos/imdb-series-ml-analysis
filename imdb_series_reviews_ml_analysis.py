@@ -4,9 +4,9 @@ import sys
 import time
 import argparse
 
+from sklearn.metrics import make_scorer, f1_score
 from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import train_test_split, StratifiedKFold,  RandomizedSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold,  RandomizedSearchCV
 
 from utils.vectorizer import get_vectorizer
 from utils.model import model
@@ -31,10 +31,10 @@ class imdb_series_reviews_ml_analysis:
                                     for param_name, param_values in step_params.items()}
 
             # Stratified K-Fold for cross validation
-            kfold = StratifiedKFold(n_splits=10, random_state=42)
+            kfold = StratifiedKFold(n_splits=5, random_state=42)
 
             if not use_randomized_search:
-                grid = GridSearchCV(pipeline, param_grid=grid_params, cv=2, n_jobs=4, verbose=1, error_score=0)
+                grid = GridSearchCV(pipeline, param_grid=grid_params, scoring=make_scorer(f1_score), cv=kfold, n_jobs=4, verbose=1, error_score=0)
             else:
                 grid = RandomizedSearchCV(pipeline, n_iter=5, param_distributions=grid_params, n_jobs=4, verbose=1, error_score=0)
             grid.fit(X_train, y_train)
