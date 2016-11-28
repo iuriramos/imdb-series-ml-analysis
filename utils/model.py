@@ -9,6 +9,8 @@ class model(object):
     def get_model(model_name):
         if model_name == 'RandomForestClassifier':
             return RandomForestClassifier(random_state=42, n_jobs=4)
+        elif model_name == 'MultinomialNB':
+            return MultinomialNB()
         elif model_name == 'SVC':
             return SVC(kernel='rbf', random_state=42)
         elif model_name == 'LinearSVC':
@@ -22,18 +24,19 @@ class model(object):
 
     @staticmethod
     def get_model_params(model_name):
+        model = get_model(model_name)
         if model_name == 'RandomForestClassifier':
-            return (RandomForestClassifier(random_state=42, n_jobs=4),
-                dict(n_estimators=(1, 10, 100), min_samples_split=(2, 5, 10)))
+            return model, dict(n_estimators=(1, 10, 100), min_samples_split=(2, 5, 10))
+        elif model_name == 'MultinomialNB':
+            return model, dict()
         elif model_name == 'SVC':
-            return (SVC(kernel='rbf', random_state=42),
-                dict(C=np.logspace(-1, 3, 5), gamma=np.logspace(-4, 0, 5)))
+            return model, dict(C=np.logspace(-1, 3, 5), gamma=np.logspace(-4, 0, 5))
         elif model_name == 'LinearSVC':
-            return LinearSVC(random_state=42), dict()
+            return model, dict()
         elif model_name == 'LogisticRegression':
-            return LogisticRegression(random_state=42, n_jobs=4), dict()
+            return model, dict()
         elif model_name == 'SGDClassifier':
-            return SGDClassifier(random_state=42, n_jobs=4), dict()
+            return model, dict()
 
 if __name__ == '__main__':
     pass
