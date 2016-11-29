@@ -32,12 +32,17 @@ class imdb_series_reviews_ml_analysis:
 
             # Stratified K-Fold for cross validation
             kfold = StratifiedKFold(n_splits=5, random_state=42)
+            scorer = make_scorer(f1_score)
 
-            if not use_randomized_search:
-                grid = GridSearchCV(pipeline, param_grid=grid_params, scoring=make_scorer(f1_score), cv=kfold, n_jobs=4, verbose=1, error_score=0)
-            else:
-                grid = RandomizedSearchCV(pipeline, n_iter=5, param_distributions=grid_params, n_jobs=4, verbose=1, error_score=0)
-            grid.fit(X_train, y_train)
+            try:
+                if not use_randomized_search:
+                    grid = GridSearchCV(pipeline, param_grid=grid_params, scoring=scorer, cv=kfold, n_jobs=4, verbose=1, error_score=0)
+                else:
+                    grid = RandomizedSearchCV(pipeline, n_iter=5, param_distributions=grid_params, scoring=scorer, n_jobs=4, verbose=1, error_score=0)
+                grid.fit(X_train, y_train)
+            except ValueError as e:
+                print 'ValueError: {} (status=not raised)'.format(str(e))
+                return
 
             # Present model results
             print '*' * 20
@@ -73,7 +78,7 @@ def run():
     parser.add_argument('-ngram-range', default='(1, 1)', choices=('(1, 1)', '(1, 2)', '(1, 3)'), dest='ngram_range', help='Ngram range used for text parsing. [choices available: (1, 1) (default), (1,2), (1, 3)')
     parser.add_argument('--no-hashing', action='store_true', default=False, dest='no_hashing', help='Do not use hashing in feature extraction')
     parser.add_argument('--no-tf-idf', action='store_true', default=False, dest='no_tf_idf', help='Do not use TF-IDF feature extraction')
-    parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'SVC', 'SGDClassifier'), dest='model_name', help='ML model to classify reviews')
+    parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'NuSVC', 'SVC'), dest='model_name', help='ML model to classify reviews')
     parser.add_argument('--use-randomized-search', action='store_true', default=False, dest='use_randomized_search', help='Use RandomizedSearchCV (faster) instead of regular GridSearchCV')
     parser.add_argument('-r', '--show-results', action='store_true', default=False, dest='show_results', help='Show results for all combinations of parameters')
 
@@ -91,7 +96,7 @@ def run():
 
 def run_all_settings():
     imdb = imdb_series_reviews_ml_analysis()
-    dir_path = './results'
+    dir_path = './results_f1'
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
 
@@ -111,7 +116,7 @@ def run_all_settings():
                         'use_stop_words': use_stop_words,
                         'ngram_range': ngram_range}
                     for model_name in ('RandomForestClassifier', 'LogisticRegression',
-                                                    'LinearSVC', 'SVC', 'SGDClassifier'):
+                                                     'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'NuSVC', 'SVC'):
                         prefix.append(model_name)
                         file_path = os.path.join(dir_path, '_'.join(prefix) + '.txt')
                         with open(file_path, 'w') as f:
@@ -126,5 +131,5 @@ def run_all_settings():
             prefix.pop()
         prefix.pop()
 if __name__ == '__main__':
-    run()
-    # run_all_settings()
+    # run()
+    run_all_settings()
