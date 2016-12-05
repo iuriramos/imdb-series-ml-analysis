@@ -28,21 +28,21 @@ class model(object):
 
     @staticmethod
     def get_model_params(model_name):
-        model = get_model(model_name)
+        model_ = model.get_model(model_name)
         if model_name == 'RandomForestClassifier':
-            return model, dict(n_estimators=(1, 10, 100), min_samples_split=(2, 5, 10))
+            return model_, dict(n_estimators=(1, 10, 100), min_samples_split=(2, 5, 10))
         elif model_name == 'MultinomialNB':
-            return model, dict(alpha=np.linspace(0.1, 1, 10))
+            return model_, dict(alpha=np.linspace(0.1, 1, 10))
         elif model_name == 'BernoulliNB':
-            return model, dict(alpha=np.linspace(0.1, 1, 10))
+            return model_, dict(alpha=np.linspace(0.1, 1, 10))
         elif model_name == 'SVC':
-            return model, dict(C=np.logspace(-1, 3, 5), gamma=np.logspace(-4, 0, 5))
+            return model_, dict(C=np.logspace(-1, 3, 5), gamma=np.logspace(-4, 0, 5))
         elif model_name == 'NuSVC':
-            return model, dict(nu=np.linspace(0.1, 1, 10), gamma=np.logspace(-4, 0, 5))
+            return model_, dict(nu=np.linspace(0.1, 1, 10), gamma=np.logspace(-4, 0, 5))
         elif model_name == 'LinearSVC':
-            return model, dict(C=np.logspace(-1, 3, 5))
+            return model_, dict(C=np.logspace(-1, 3, 5))
         elif model_name == 'LogisticRegression':
-            return model, dict(C=np.logspace(-1, 3, 5))
+            return model_, dict(C=np.logspace(-1, 3, 5))
         # elif model_name == 'SGDClassifier':
         #    return model, dict()
 
