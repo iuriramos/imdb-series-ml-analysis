@@ -8,7 +8,7 @@ import requests
 from imdbpie import Imdb
 from bs4 import BeautifulSoup
 
-BASE_DIRECTORY_PATH = './reviews'
+BASE_DIRECTORY_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'reviews'))
 
 def create_dir_structure(directory_name, rating_range):
     directory_path = os.path.abspath(
@@ -130,9 +130,6 @@ def fetch_imdb_crime_series_reviews(top=25,neg_rating_range=None, pos_rating_ran
 
 def run():
     X, y = fetch_imdb_crime_series_reviews()
-    pos_reviews = sum(y)
-    neg_reviews = len(y) - pos_reviews
-    print 'positive = ', pos_reviews, ', negative = ', neg_reviews
 
 if __name__ == '__main__':
     run()
