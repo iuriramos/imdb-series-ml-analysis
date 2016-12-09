@@ -19,6 +19,7 @@ class imdb_series_reviews_ml_analysis:
         self.pos_rating_range = pos_rating_range or (8, 9, 10)
 
     def report(self, vectorizer_params, model_name, use_randomized_search=False, show_results=False):
+        print vectorizer_params
         # Perform grid search on model_params
         def grid_search():
             # steps to make pipeline
@@ -36,7 +37,7 @@ class imdb_series_reviews_ml_analysis:
 
             try:
                 if not use_randomized_search:
-                    grid = GridSearchCV(pipeline, param_grid=grid_params, scoring=scorer, cv=kfold, n_jobs=4, verbose=1, error_score=0)
+                    grid = GridSearchCV(pipeline, param_grid=grid_params, scoring=scorer, cv=kfold, n_jobs=-1, verbose=1, error_score=0)
                 else:
                     grid = RandomizedSearchCV(pipeline, n_iter=5, param_distributions=grid_params, scoring=scorer, n_jobs=4, verbose=1, error_score=0)
                 grid.fit(X_train, y_train)
@@ -75,7 +76,7 @@ def run():
 
     parser.add_argument('-n', '--n-features', type=int, default=10000, dest='n_features', help='Maximum number of features to extract from text (only used in HashingVectorizer)')
     parser.add_argument('--no-stop-words', action='store_true', default=False, dest='no_stop_words', help='Do not erase stop-words.')
-    parser.add_argument('-ngram-range', default='(1, 1)', choices=('(1, 1)', '(1, 2)', '(1, 3)'), dest='ngram_range', help='Ngram range used for text parsing. [choices available: (1, 1) (default), (1,2), (1, 3)')
+    parser.add_argument('--ngram-range', default='(1, 1)', choices=('(1, 1)', '(1, 2)', '(1, 3)'), dest='ngram_range', help='Ngram range used for text parsing. [choices available: (1, 1) (default), (1,2), (1, 3)')
     parser.add_argument('--no-hashing', action='store_true', default=False, dest='no_hashing', help='Do not use hashing in feature extraction')
     parser.add_argument('--no-tf-idf', action='store_true', default=False, dest='no_tf_idf', help='Do not use TF-IDF feature extraction')
     parser.add_argument('-m', '--model', default='RandomForestClassifier', choices=('RandomForestClassifier', 'LogisticRegression', 'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'NuSVC', 'SVC'), dest='model_name', help='ML model to classify reviews')
@@ -94,42 +95,5 @@ def run():
     }
     imdb.report(vectorizer_params=vectorizer_params, model_name=args.model_name, use_randomized_search=args.use_randomized_search, show_results=args.show_results)
 
-def run_all_settings():
-    imdb = imdb_series_reviews_ml_analysis()
-    dir_path = './results_f1'
-    if not os.path.exists(dir_path):
-        os.mkdir(dir_path)
-
-    prefix = []
-    # for use_hashing in False, True:
-    for use_hashing in True, :
-        prefix.append('hash' if use_hashing else 'count')
-        for use_tf_idf in False, True:
-            prefix.append('tf_idf' if use_tf_idf else '')
-            for use_stop_words in False, True:
-                prefix.append('sw' if use_stop_words else '')
-                for ngram_range in ((1, 1), (1, 2), (1, 3)):
-                    prefix.append('ngram_' + str(ngram_range))
-                    vectorizer_params = {
-                        'use_hashing': use_hashing,
-                        'use_tf_idf': use_tf_idf,
-                        'use_stop_words': use_stop_words,
-                        'ngram_range': ngram_range}
-                    for model_name in ('RandomForestClassifier', 'LogisticRegression',
-                                                     'BernoulliNB', 'MultinomialNB', 'LinearSVC', 'NuSVC', 'SVC'):
-                        prefix.append(model_name)
-                        file_path = os.path.join(dir_path, '_'.join(prefix) + '.txt')
-                        with open(file_path, 'w') as f:
-                            sys.stdout = f
-                            imdb.report(
-                                        vectorizer_params=vectorizer_params,
-                                        model_name=model_name,
-                                        show_results=True)
-                        prefix.pop()
-                    prefix.pop()
-                prefix.pop()
-            prefix.pop()
-        prefix.pop()
 if __name__ == '__main__':
-    # run()
-    run_all_settings()
+    run()
